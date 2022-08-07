@@ -1,0 +1,15 @@
+---
+title: Welcome
+---
+
+<body>
+    <p>Hi! I'm Eric. I like making cool stuff!</p>
+
+    <p>
+    <a href="/posts/">Blog</a>
+    </p>
+    <p>
+    <a href="/cv.html">CV</a>
+    </p>
+
+</body>
