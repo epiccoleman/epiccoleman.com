@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="<%= asset("css/styles.css") %>">
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro:300&subset=latin,latin-ext" rel="stylesheet" type="text/css">
     <title><%= @page.title %> - <%= @site.name %></title>
   </head>
   <body>
