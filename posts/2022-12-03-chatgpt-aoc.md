@@ -131,21 +131,23 @@ I know this thing's whole deal is that it can remember context, but i am super i
 I copied this into my code and then started writing a quick little docstring for it. Then I thought, hey, why not let the bot do that too:
 
 > **Eric Coleman**
+>
 > can you write a docstring for that function?
 
 
 > **ChatGPT**
-> Sure, here is a docstring for the play/2 function:
 >
+> Sure, here is a docstring for the play/2 function:
+> ```
 > @spec play(player1_move :: String.t, player2_move :: String.t) :: atom
 > def play(player1_move, player2_move) do
 >   # function implementation goes here
 > end
->
+> ```
 > The docstring uses the @spec macro to specify the types of the function's arguments and return value. In this case, the play/2 function takes two string arguments (player1_move and player2_move) and returns an atom.
 >
 > The docstring can be used to provide additional documentation for the function, including a brief description of what the function does and how it should be used. Here is an example of what the complete docstring for the play/2 function might look like:
->
+> ```
 > @spec play(player1_move :: String.t, player2_move :: String.t) :: atom
 > def play(player1_move, player2_move) do
 >   """
@@ -192,7 +194,7 @@ I copied this into my code and then started writing a quick little docstring for
 >     _ -> :draw
 >   end
 > end
->
+> ```
 > This docstring provides a brief description of what the play/2 function does and how it should be used. It also includes several examples of how the function can be called and what the expected return value will be.
 
 
@@ -205,9 +207,11 @@ Also, it wrote a bunch of unit tests - because those examples prefixed with `iex
 OK, so on that train of thought, I asked it to write a unit test for me:
 
 >**Eric Coleman**
+>
 >can you write an exunit test describing the function?
 
 >**ChatGPT**
+>
 >Sure, here is an example of an ExUnit test for the play/2 function:
 >
 >defmodule RockPaperScissorsTest do
@@ -546,6 +550,8 @@ So close, but there's still an issue. That's ok though, my robotic friend - let 
 > ```
 
 So, that's my little demo. I am honestly blown away by this thing. The conversational nature of interacting with it is really cool and natural too. I leaned toward overspecificity a lot in this conversation, but there are a few places where I was somewhat ambiguous and it figured out what I meant.
+
+It's also crazy to think how much better this could become with just a few tweaks - like for example, what if it could actually _run_ the tests it's writing, and create its own little feedback loop where it can realize it went wrong without me telling it?
 
 I don't know what to think about how this will change programming, but I can't help but feel that we're on the precipice of a bit of a paradigm shift when computer assistance is this good.
 
