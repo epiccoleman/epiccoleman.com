@@ -1,0 +1,42 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro:300&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <title>Posts Tagged elixir - epiccoleman.com</title>
+  </head>
+  <body>
+    <h2 id="posts-tagged-elixir">Posts Tagged elixir</h2><ul><li><p><a href="/posts/2022-12-03-spotifylamba.html">Another ChatGPT sample</a>
+      —
+      <span class="date">Saturday, 3 Dec 2022</span></p></li><li><p><a href="/posts/2022-12-03-chatgpt-incremental.html">An incremental game, built by ChatGPT</a>
+      —
+      <span class="date">Saturday, 3 Dec 2022</span></p></li><li><p><a href="/posts/2022-12-03-chatgpt-aoc.html">Pairing on Elixir with ChatGPT</a>
+      —
+      <span class="date">Saturday, 3 Dec 2022</span></p></li></ul>
+  </body>
+</html>
+<script>
+const ws_url = "ws://" + location.host + "/serum_live_reloader";
+var ws;
+
+connect();
+
+function connect() {
+  ws = new WebSocket(ws_url);
+  ws.onmessage = onMessage;
+  ws.onclose = onClose;
+}
+
+function onMessage(e) {
+  if (e.data === "reload") {
+    location.reload();
+  }
+}
+
+function onClose(e) {
+  console.warn("WebSocket disconnected from server. Reconnecting in 10 seconds.");
+  setTimeout(connect, 10000)
+}
+</script>

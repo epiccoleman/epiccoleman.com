@@ -1,0 +1,273 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro:300&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <title>Pairing on Elixir with ChatGPT - epiccoleman.com</title>
+  </head>
+  <body>
+    <header>
+epiccoleman.com
+
+<ul><li><a href="/index.html">Home</a></li><li><a href="/posts">Posts</a></li></ul></header><h1 id="pairing-on-elixir-with-chatgpt">Pairing on Elixir with ChatGPT</h1><p>Saturday, 3 Dec 2022</p><p>Tags:</p><ul><li><a href="/tags/chatgpt">chatgpt</a></li><li><a href="/tags/elixir">elixir</a></li><li><a href="/tags/programming">programming</a></li></ul><p>So I was looking at <a href="https://adventofcode.com/2022/day/2">yesterday’s Advent of Code problem</a>. And, coincidentally, yesterday I did a little chatting with <a href="https://chat.openai.com/chat">OpenAI’s new ChatGPT AI</a>. I had it writing stories and song lyrics and telling jokes - it’s a really neat piece of software. If you’ve seen any of the many memes and screenshots going around and haven’t given it a shot yet, I think you should go check it out.</p><p>I’ve seen a couple examples of people asking it for coding advice, so I thought, what the hell, let’s try it out on this Advent of Code problem. The results were pretty damn impressive.</p><blockquote><p><strong>Eric Coleman</strong>:</p><p>write me an elixir function which takes two string parameters representing moves in a rock paper scissors game. the parameters will be either “rock”, “paper”, or “scissors”. the function should return an atom. :win if the second player wins, :lose if the second player loses, and :draw if the game is a draw.</p></blockquote><blockquote><p><strong>ChatGPT</strong>:</p><p>Here is an example of an Elixir function that takes two strings representing moves in a rock paper scissors game and returns an atom indicating the result of the game:</p><pre><code class=""> defmodule RockPaperScissors do
+ def play(player1_move, player2_move) do
+   case {player1_move, player2_move} do
+     {&quot;rock&quot;, &quot;scissors&quot;} -&gt; :win
+     {&quot;rock&quot;, &quot;paper&quot;} -&gt; :lose
+     {&quot;scissors&quot;, &quot;rock&quot;} -&gt; :lose
+     {&quot;scissors&quot;, &quot;paper&quot;} -&gt; :win
+     {&quot;paper&quot;, &quot;rock&quot;} -&gt; :win
+     {&quot;paper&quot;, &quot;scissors&quot;} -&gt; :lose
+     _ -&gt; :draw
+   end
+ end
+&gt;end</code></pre><p>In this implementation, the play/2 function uses a case statement to match on the tuple of moves made by the two players. The _ catch-all pattern is used to handle the cases where the moves are the same (a draw) or when the moves are invalid (also a draw).</p><p>Here are some examples of how this function could be used:</p><pre><code class="">iex&gt; RockPaperScissors.play(&quot;rock&quot;, &quot;scissors&quot;)
+:win
+
+iex&gt; RockPaperScissors.play(&quot;rock&quot;, &quot;paper&quot;)
+:lose
+
+iex&gt; RockPaperScissors.play(&quot;scissors&quot;, &quot;rock&quot;)
+:lose
+
+iex&gt; RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;)
+:win
+
+iex&gt; RockPaperScissors.play(&quot;paper&quot;, &quot;rock&quot;)
+:win
+
+iex&gt; RockPaperScissors.play(&quot;paper&quot;, &quot;scissors&quot;)
+:lose
+
+iex&gt; RockPaperScissors.play(&quot;rock&quot;, &quot;rock&quot;)
+:draw
+
+iex&gt; RockPaperScissors.play(&quot;scissors&quot;, &quot;foobar&quot;)
+:draw</code></pre></blockquote><p>So first observation is it came up with a clean, compact, and correct function that was actually better than where my mind was at (I had a whole if-else thing thought out, and then I was reminded that cond do was nicer/better for this case.)</p><p>But, it did need a read through, because the first iteration wasn’t quite what I asked for - I wanted the result atom to reflect <em>player 2</em>’s win/loss. The initial version was implemented for player 1.</p><p>I know this thing’s whole deal is that it can remember context, but i am super impressed that I can just ask for the next version in pretty plain english and it correctly figured out what i wanted and changed the code to match!</p><p>&gt;<strong>Eric Coleman</strong></p><blockquote><p>&gt;can you change the function so that it returns :win when player 2 wins and :lose when player 2 loses? the current function returns whether player 1 has won or lost.</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>Sure, here is an updated version of the play/2 function that returns :win when player 2 wins and :lose when player 2 loses:</p><pre><code class="">defmodule RockPaperScissors do
+  def play(player1_move, player2_move) do
+    case {player1_move, player2_move} do
+      {&quot;rock&quot;, &quot;scissors&quot;} -&gt; :lose
+      {&quot;rock&quot;, &quot;paper&quot;} -&gt; :win
+      {&quot;scissors&quot;, &quot;rock&quot;} -&gt; :win
+      {&quot;scissors&quot;, &quot;paper&quot;} -&gt; :lose
+      {&quot;paper&quot;, &quot;rock&quot;} -&gt; :lose
+      {&quot;paper&quot;, &quot;scissors&quot;} -&gt; :win
+      _ -&gt; :draw
+    end
+  end
+end</code></pre><p>In this implementation, the case statement has been updated to return :win when player 2 wins and :lose when player 2 loses. The _ catch-all pattern is still used to handle the cases where the moves are the same (a draw) or when the moves are invalid (also a draw).</p><p>Here are some examples of how this updated function could be used:</p><pre><code class="">iex&gt; RockPaperScissors.play(&quot;rock&quot;, &quot;scissors&quot;)
+:lose
+
+iex&gt; RockPaperScissors.play(&quot;rock&quot;, &quot;paper&quot;)
+:win
+
+iex&gt; RockPaperScissors.play(&quot;scissors&quot;, &quot;rock&quot;)
+:win
+
+iex&gt; RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;)
+:lose
+
+iex&gt; RockPaperScissors.play(&quot;paper&quot;, &quot;rock&quot;)
+:lose
+
+iex&gt; RockPaperScissors.play(&quot;paper&quot;, &quot;scissors&quot;)
+:win
+
+iex&gt; RockPaperScissors.play(&quot;rock&quot;, &quot;rock&quot;)
+:draw
+
+iex&gt; RockPaperScissors.play(&quot;scissors&quot;, &quot;foobar&quot;)
+:draw</code></pre></blockquote><blockquote><p><strong>Eric Coleman</strong></p><p>beautifully done, thank you.</p></blockquote><blockquote><p><strong>ChatGPT</strong>:</p><p>You’re welcome! I’m glad I could help. Let me know if you have any other questions.</p></blockquote><p>I copied this into my code and then started writing a quick little docstring for it. Then I thought, hey, why not let the bot do that too:</p><blockquote><p><strong>Eric Coleman</strong></p><p>can you write a docstring for that function?</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>Sure, here is a docstring for the play/2 function:</p><pre><code class="">@spec play(player1_move :: String.t, player2_move :: String.t) :: atom
+def play(player1_move, player2_move) do
+  # function implementation goes here
+end</code></pre><p>The docstring uses the @spec macro to specify the types of the function’s arguments and return value. In this case, the play/2 function takes two string arguments (player1_move and player2_move) and returns an atom.</p><p>The docstring can be used to provide additional documentation for the function, including a brief description of what the function does and how it should be used. Here is an example of what the complete docstring for the play/2 function might look like:</p><pre><code class="">@spec play(player1_move :: String.t, player2_move :: String.t) :: atom
+def play(player1_move, player2_move) do
+  &quot;&quot;&quot;
+  Plays a game of rock paper scissors between player 1 and player 2.
+
+  Returns an atom indicating the result of the game:
+    * `:win` if player 2 wins
+    * `:lose` if player 2 loses
+    * `:draw` if the game is a draw
+
+  ## Examples
+
+      iex&gt; RockPaperScissors.play(&quot;rock&quot;, &quot;scissors&quot;)
+      :lose
+
+      iex&gt; RockPaperScissors.play(&quot;rock&quot;, &quot;paper&quot;)
+      :win
+
+      iex&gt; RockPaperScissors.play(&quot;scissors&quot;, &quot;rock&quot;)
+      :win
+
+      iex&gt; RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;)
+      :lose
+
+      iex&gt; RockPaperScissors.play(&quot;paper&quot;, &quot;rock&quot;)
+      :lose
+
+      iex&gt; RockPaperScissors.play(&quot;paper&quot;, &quot;scissors&quot;)
+      :win
+
+      iex&gt; RockPaperScissors.play(&quot;rock&quot;, &quot;rock&quot;)
+      :draw
+
+      iex&gt; RockPaperScissors.play(&quot;scissors&quot;, &quot;foobar&quot;)
+      :draw
+  &quot;&quot;&quot;
+  case {player1_move, player2_move} do
+    {&quot;rock&quot;, &quot;scissors&quot;} -&gt; :lose
+    {&quot;rock&quot;, &quot;paper&quot;} -&gt; :win
+    {&quot;scissors&quot;, &quot;rock&quot;} -&gt; :win
+    {&quot;scissors&quot;, &quot;paper&quot;} -&gt; :lose
+    {&quot;paper&quot;, &quot;rock&quot;} -&gt; :lose
+    {&quot;paper&quot;, &quot;scissors&quot;} -&gt; :win
+    _ -&gt; :draw
+  end
+end</code></pre><p>This docstring provides a brief description of what the play/2 function does and how it should be used. It also includes several examples of how the function can be called and what the expected return value will be.</p></blockquote><p>Now this is almost more impressive to me - the description of the function is a little terse and I would probably add a sentence about the parameters. But it’s also totally acceptable.</p><p>Then it goes the extra mile: it wrote a typespec for me (I don’t usually bother with those, but hey, it’s free).</p><p>Also, it wrote a bunch of unit tests - because those examples prefixed with <code class="inline">iex&gt;</code> in the docstring are what are called <a href="https://elixir-lang.org/getting-started/mix-otp/docs-tests-and-with.html">doctests</a>. With just a single line of extra code in your test file, these examples in the documentation can be set up to run as part of the test suite. (Elixir is cool!)</p><p>OK, so on that train of thought, I asked it to write a unit test for me:</p><p>&gt;<strong>Eric Coleman</strong></p><blockquote><p>&gt;can you write an exunit test describing the function?</p></blockquote><p>&gt;<strong>ChatGPT</strong></p><blockquote><p>&gt;Sure, here is an example of an ExUnit test for the play/2 function:</p><p>&gt;defmodule RockPaperScissorsTest do
+ use ExUnit.Case</p><p> test “player 2 wins” do
+   assert RockPaperScissors.play(“rock”, “scissors”) == :lose
+   assert RockPaperScissors.play(“rock”, “paper”) == :win
+   assert RockPaperScissors.play(“scissors”, “rock”) == :win
+   assert RockPaperScissors.play(“scissors”, “paper”) == :lose
+   assert RockPaperScissors.play(“paper”, “rock”) == :lose
+   assert RockPaperScissors.play(“paper”, “scissors”) == :win
+ end</p><p> test “draw” do
+   assert RockPaperScissors.play(“rock”, “rock”) == :draw
+   assert RockPaperScissors.play(“scissors”, “foobar”) == :draw
+ end
+&gt;end</p><p>&gt;In this test module, the test/2 macro is used to define two separate test cases: one for when player 2 wins and one for when the game is a draw. Each test case consists of one or more assert statements that call the play/2 function with different arguments and check that the returned value matches the expected result.</p><p>&gt;When run, this test module will execute each of the test cases and verify that the play/2 function behaves as expected. If any of the assert statements fail, the test will fail and provide a detailed error message indicating which test case failed and what the expected and actual values were.</p><p>&gt;Here is an example of what the output of running this test module might look like:</p><p>&gt;$ mix test</p><p>&gt;..</p><p>&gt;Finished in 0.03 seconds
+&gt;2 tests, 10 assertions, 0 failures</p><p>&gt;In this example, the two test cases were run and all 10 of the assert statements passed, so the test run was successful.</p></blockquote><p>OK, so that’s pretty good. The two tests correctly describe the behavior.</p><p>Also, they reveal a behavior that I hadn’t thought of when I read through the initial function - that you can pass any string into the function, and it will just return a draw. So, I need to think about that and if it’s what I want, or if I should add some guards or something and throw when the args aren’t one of “rock”, “paper”, or “scissors”. (Probably fine for this case, since it’s just Advent of Code, but if it was code I was being paid for, that’s a pretty valuable hint that the initial implementation needs some extra attention.)</p><p>However, it seemed to miss a bit of the intent of the test it wrote. It named the test “player 2 wins” but then also described cases where player 2 lost. The code’s still correct, but the name needs to be fixed. Here’s where it gets a bit confused:</p><blockquote><p><strong>Eric Coleman</strong></p><p>could you break the cases where player 2 loses out into a separate test case?</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>Sure, here is an updated version of the test module that includes a separate test case for when player 2 loses:</p><pre><code class="">defmodule RockPaperScissorsTest do
+  use ExUnit.Case
+
+  test &quot;player 2 wins&quot; do
+    assert RockPaperScissors.play(&quot;rock&quot;, &quot;scissors&quot;) == :lose
+    assert RockPaperScissors.play(&quot;rock&quot;, &quot;paper&quot;) == :win
+    assert RockPaperScissors.play(&quot;scissors&quot;, &quot;rock&quot;) == :win
+    assert RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;) == :lose
+    assert RockPaperScissors.play(&quot;paper&quot;, &quot;rock&quot;) == :lose
+    assert RockPaperScissors.play(&quot;paper&quot;, &quot;scissors&quot;) == :win
+  end
+
+  test &quot;player 2 loses&quot; do
+    assert RockPaperScissors.play(&quot;rock&quot;, &quot;scissors&quot;) == :lose
+    assert RockPaperScissors.play(&quot;rock&quot;, &quot;paper&quot;) == :win
+    assert RockPaperScissors.play(&quot;scissors&quot;, &quot;rock&quot;) == :win
+    assert RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;) == :lose
+    assert RockPaperScissors.play(&quot;paper&quot;, &quot;rock&quot;) == :lose
+    assert RockPaperScissors.play(&quot;paper&quot;, &quot;scissors&quot;) == :win
+  end
+
+  test &quot;draw&quot; do
+    assert RockPaperScissors.play(&quot;rock&quot;, &quot;rock&quot;) == :draw
+    assert RockPaperScissors.play(&quot;scissors&quot;, &quot;foobar&quot;) == :draw
+  end
+end</code></pre><p>In this updated test module, the test cases have been separated into three distinct test cases: one for when player 2 wins, one for when player 2 loses, and one for when the game is a draw. Each test case consists of one or more assert statements that call the play/2 function with different arguments and check that the returned value matches the expected result.</p><p>When run, this test module will execute each of the test cases and verify that the play/2 function behaves as expected. If any of the assert statements fail, the test will fail and provide a detailed error message indicating which test case failed and what the expected and actual values were.</p><p>Here is an example of what the output of running this updated test module might look like:</p><pre><code class="">$ mix test
+
+...
+
+Finished in 0.03 seconds
+3 tests, 10 assertions, 0 failures</code></pre><p>In this example, the three test cases were run and all 10 of the assert statements passed, so the test run was successful.</p></blockquote><p>So, it correctly added a new test with the right name, but it kept the same implementation. I mean at this point, I could copy and paste and just delete the junk lines, and boom, instant tests. But let’s see if GPT can figure out what I want:</p><blockquote><p><strong>Eric Coleman</strong></p><p>please remove the lines where :win is returned from the “player 2 loses” test</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>Sure, here is an updated version of the test module that removes the lines where :win is returned from the “player 2 loses” test case:</p><pre><code class="">defmodule RockPaperScissorsTest do
+  use ExUnit.Case
+
+  test &quot;player 2 wins&quot; do
+    assert RockPaperScissors.play(&quot;rock&quot;, &quot;scissors&quot;) == :lose
+    assert RockPaperScissors.play(&quot;rock&quot;, &quot;paper&quot;) == :win
+    assert RockPaperScissors.play(&quot;scissors&quot;, &quot;rock&quot;) == :win
+    assert RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;) == :lose
+    assert RockPaperScissors.play(&quot;paper&quot;, &quot;rock&quot;) == :lose
+    assert RockPaperScissors.play(&quot;paper&quot;, &quot;scissors&quot;) == :win
+  end
+
+  test &quot;player 2 loses&quot; do
+    assert RockPaperScissors.play(&quot;scissors&quot;, &quot;rock&quot;) == :lose
+    assert RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;) == :lose
+    assert RockPaperScissors.play(&quot;paper&quot;, &quot;rock&quot;) == :lose
+    assert RockPaperScissors.play(&quot;paper&quot;, &quot;scissors&quot;) == :lose
+    assert RockPaperScissors.play(&quot;rock&quot;, &quot;scissors&quot;) == :lose
+    assert RockPaperScissors.play(&quot;rock&quot;, &quot;paper&quot;) == :lose
+  end
+
+  test &quot;draw&quot; do
+    assert RockPaperScissors.play(&quot;rock&quot;, &quot;rock&quot;) == :draw
+    assert RockPaperScissors.play(&quot;scissors&quot;, &quot;foobar&quot;) == :draw
+  end
+end</code></pre><p>In this updated test module, the “player 2 loses” test case only includes assert statements that call the play/2 function with moves that result in player 2 losing. This ensures that the test case only includes test cases where player 2 loses and not where player 2 wins.</p><p>When run, this test module will execute each of the test cases and verify that the play/2 function behaves as expected. If any of the assert statements fail, the test will fail and provide a detailed error message indicating which test case failed and what the expected and actual values were.</p><p>Here is an example of what the output of running this updated test module might look like:</p><pre><code class="">$ mix test
+
+...
+
+Finished in 0.03 seconds
+3 tests, 10 assertions, 0 failures</code></pre><p>In this example, the three test cases were run and all 10 of the assert statements passed, so the test run was successful.</p></blockquote><p>Ahh, so we’ve lost the plot a bit here. First off, it didn’t really do what I asked for. And more importantly, the test no longer passes. And what’s worse - it tells you that it would pass! I guess to be completely fair, it does say “this is an example”, so it makes no claim that it ran the test in the background. But still, it certainly looks like it’s telling you that the pass <em>would</em> pass.</p><p>At this point the pragmatic thing to do would probably be to just copy / pastes the test to my test file and delete the wrong lines, but let’s see if we can get it back on track:</p><blockquote><p><strong>Eric Coleman</strong></p><p>&gt;currently, the “player 2 loses” test fails, because it asserts that the :lose atom will be returned in cases where player 2 would have won. can you change “player 2 test” so that it only tests the three cases in which player 2 actually loses?</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>&gt;Sure, here is an updated version of the test module that only includes test cases where player 2 actually loses:</p><pre><code class="">&gt;defmodule RockPaperScissorsTest do
+ use ExUnit.Case
+
+ test &quot;player 2 wins&quot; do
+   assert RockPaperScissors.play(&quot;rock&quot;, &quot;scissors&quot;) == :lose
+   assert RockPaperScissors.play(&quot;rock&quot;, &quot;paper&quot;) == :win
+   assert RockPaperScissors.play(&quot;scissors&quot;, &quot;rock&quot;) == :win
+   assert RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;) == :lose
+   assert RockPaperScissors.play(&quot;paper&quot;, &quot;rock&quot;) == :lose
+   assert RockPaperScissors.play(&quot;paper&quot;, &quot;scissors&quot;) == :win
+ end
+
+ test &quot;player 2 loses&quot; do
+   assert RockPaperScissors.play(&quot;rock&quot;, &quot;rock&quot;) == :lose
+   assert RockPaperScissors.play(&quot;rock&quot;, &quot;foobar&quot;) == :lose
+   assert RockPaperScissors.play(&quot;foobar&quot;, &quot;rock&quot;) == :lose
+ end
+
+ test &quot;draw&quot; do
+   assert RockPaperScissors.play(&quot;rock&quot;, &quot;rock&quot;) == :draw
+   assert RockPaperScissors.play(&quot;scissors&quot;, &quot;foobar&quot;) == :draw
+ end
+&gt;end</code></pre><p>&gt;In this updated test module, the “player 2 loses” test case only includes test cases where player 2 actually loses. This is accomplished by including test cases where player 1 and player 2 make the same move (a draw, which results in a loss for player 2), and test cases where either player 1 or player 2 makes an invalid move (also a draw, which again results in a loss for player 2).</p><p>&gt;When run, this test module will execute each of the test cases and verify that the play/2 function behaves as expected. If any of the assert statements fail, the test will fail and provide a detailed error message indicating which test case failed and what the expected and actual values were.</p><p>&gt;Here is an example of what the output of running this updated test module might look like:
+&gt;<code class="inline">&gt;$ mix test &gt;... &gt;Finished in 0.03 seconds &gt;3 tests, 10 assertions, 0 failures &gt;</code>
+&gt;In this example, the three test cases were run and all 10 of the assert statements passed, so the test run was successful.</p></blockquote><p>Well, it’s a <em>little</em> closer, in that the <code class="inline">player 2 loses</code> test now only has three assertions. But they’re the wrong assertions, and so the test won’t pass. Again, at this point it would make sense to just throw in the towel. But let’s be very specific about what we want and see if ChatGPT can get it right:</p><blockquote><p><strong>Eric Coleman</strong></p><p>The “player 2 loses” test is still wrong. It should only include the following cases: (“rock”, “scissors”), (“paper”, “rock”), and (“scissors”, “paper”). Can you rewrite it so that those are the only cases in that test? We expect the :lose atom to be returned for each of these cases.</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>Sure, here is an updated version of the test module that only includes the specified test cases in the “player 2 loses” test case:
+&gt;<code class="inline">defmodule RockPaperScissorsTest do use ExUnit.Case test &quot;player 2 wins&quot; do assert RockPaperScissors.play(&quot;rock&quot;, &quot;scissors&quot;) == :lose assert RockPaperScissors.play(&quot;rock&quot;, &quot;paper&quot;) == :win assert RockPaperScissors.play(&quot;scissors&quot;, &quot;rock&quot;) == :win assert RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;) == :lose assert RockPaperScissors.play(&quot;paper&quot;, &quot;rock&quot;) == :lose assert RockPaperScissors.play(&quot;paper&quot;, &quot;scissors&quot;) == :win end test &quot;player 2 loses&quot; do assert RockPaperScissors.play(&quot;rock&quot;, &quot;scissors&quot;) == :lose assert RockPaperScissors.play(&quot;paper&quot;, &quot;rock&quot;) == :lose assert RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;) == :lose end test &quot;draw&quot; do assert RockPaperScissors.play(&quot;rock&quot;, &quot;rock&quot;) == :draw assert RockPaperScissors.play(&quot;scissors&quot;, &quot;foobar&quot;) == :draw end end &gt;</code>
+In this updated test module, the “player 2 loses” test case only includes the three specified test cases where player 2 loses. This is accomplished by removing the previous test cases and only including the three test cases where player 2 loses.</p><p>When run, this test module will execute each of the test cases and verify that the play/2 function behaves as expected. If any of the assert statements fail, the test will fail and provide a detailed error message indicating which test case failed and what the expected and actual values were.</p><p>Here is an example of what the output of running this updated test module might look like:
+&gt;<code class="inline">$ mix test ... Finished in 0.03 seconds 3 tests, 8 assertions, 0 failures &gt;</code>
+In this example, the three test cases were run and all 8</p></blockquote><p>So I had to specify the cases to the point that it would have been faster to just write the code, but still, with gentle direction, it produced what I asked for. It’s sort of like a junior programmer who is ridiculously good at remembering syntax, I guess - a valuable pair partner but you wouldn’t trust them to go off on their own just yet.</p><p>Just for fun, let’s get it to fix that first test:</p><blockquote><p><strong>Eric Coleman</strong></p><p>Can you update the “player 2 wins” test so that it only includes the lines where the :win atom is returned?</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>Sure, here is an updated version of the test module that only includes test cases where player 2 wins in the “player 2 wins” test case:
+&gt;<code class="inline">defmodule RockPaperScissorsTest do use ExUnit.Case test &quot;player 2 wins&quot; do assert RockPaperScissors.play(&quot;rock&quot;, &quot;paper&quot;) == :win assert RockPaperScissors.play(&quot;scissors&quot;, &quot;rock&quot;) == :win assert RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;) == :win end test &quot;player 2 loses&quot; do assert RockPaperScissors.play(&quot;rock&quot;, &quot;scissors&quot;) == :lose assert RockPaperScissors.play(&quot;paper&quot;, &quot;rock&quot;) == :lose assert RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;) == :lose end test &quot;draw&quot; do assert RockPaperScissors.play(&quot;rock&quot;, &quot;rock&quot;) == :draw assert RockPaperScissors.play(&quot;scissors&quot;, &quot;foobar&quot;) == :draw end end &gt;</code>
+In this updated test module, the “player 2 wins” test case only includes test cases where player 2 wins. This is accomplished by removing the previous test cases and only including the three test cases where player 2 wins.</p><p>When run, this test module will execute each of the test cases and verify that the play/2 function behaves as expected. If any of the assert statements fail, the test will fail and provide a detailed error message indicating which test case failed and what the expected and actual values were.</p><p>Here is an example of what the output of running this updated test module might look like:
+&gt;<code class="inline">$ mix test ... Finished in 0.03 seconds 3 tests &gt;</code></p></blockquote><p>So close, but there’s still an issue. That’s ok though, my robotic friend - let me help:</p><blockquote><p><strong>Eric Coleman</strong></p><p>the last assertion in the “player 2 wins” test is incorrect. can you change that line so that it tests the case (“paper”, “scissors”)?</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>Sure, here is an updated version of the test module that includes the correct test case in the “player 2 wins” test case:</p><p>defmodule RockPaperScissorsTest do
+  use ExUnit.Case</p><p>  test “player 2 wins” do</p><pre><code>assert RockPaperScissors.play(&quot;rock&quot;, &quot;paper&quot;) == :win
+assert RockPaperScissors.play(&quot;scissors&quot;, &quot;rock&quot;) == :win
+assert RockPaperScissors.play(&quot;paper&quot;, &quot;scissors&quot;) == :win</code></pre><p>  end</p><p>  test “player 2 loses” do</p><pre><code>assert RockPaperScissors.play(&quot;rock&quot;, &quot;scissors&quot;) == :lose
+assert RockPaperScissors.play(&quot;paper&quot;, &quot;rock&quot;) == :lose
+assert RockPaperScissors.play(&quot;scissors&quot;, &quot;paper&quot;) == :lose</code></pre><p>  end</p><p>  test “draw” do</p><pre><code>assert RockPaperScissors.play(&quot;rock&quot;, &quot;rock&quot;) == :draw
+assert RockPaperScissors.play(&quot;scissors&quot;, &quot;foobar&quot;) == :draw</code></pre><p>  end
+end</p><p>In this updated test module, the “player 2 wins” test case includes the correct test case for when player 2 wins by playing paper against player 1’s scissors.</p><p>When run, this test module will execute each of the test cases and verify that the play/2 function behaves as expected. If any of the assert statements fail, the test will fail and provide a detailed error message indicating which test case failed and what the expected and actual values were.</p><p>Here is an example of what the output of running this updated test module might look like:</p><pre><code class="">$ mix test
+
+...
+
+Finished in 0.03 seconds
+3 tests, 8 assertions, 0 failures
+
+In this example, the three test cases were run and all 8 of the assert statements passed, so the test run was successful.</code></pre></blockquote><p>So, that’s my little demo. I am honestly blown away by this thing. The conversational nature of interacting with it is really cool and natural too. I leaned toward overspecificity a lot in this conversation, but there are a few places where I was somewhat ambiguous and it figured out what I meant.</p><p>It’s also crazy to think how much better this could become with just a few tweaks - like for example, what if it could actually <em>run</em> the tests it’s writing, and create its own little feedback loop where it can realize it went wrong without me telling it?</p><p>I don’t know what to think about how this will change programming, but I can’t help but feel that we’re on the precipice of a bit of a paradigm shift when computer assistance is this good.</p><p>Overall I’m quite impressed and definitely plan to utilize this for future coding.</p>
+  </body>
+</html>
+<script>
+const ws_url = "ws://" + location.host + "/serum_live_reloader";
+var ws;
+
+connect();
+
+function connect() {
+  ws = new WebSocket(ws_url);
+  ws.onmessage = onMessage;
+  ws.onclose = onClose;
+}
+
+function onMessage(e) {
+  if (e.data === "reload") {
+    location.reload();
+  }
+}
+
+function onClose(e) {
+  console.warn("WebSocket disconnected from server. Reconnecting in 10 seconds.");
+  setTimeout(connect, 10000)
+}
+</script>

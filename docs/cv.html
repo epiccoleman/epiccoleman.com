@@ -1,0 +1,86 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro:300&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <title>CV - epiccoleman.com</title>
+  </head>
+  <body>
+    <h1 id="eric-coleman"><strong>Eric Coleman</strong></h1><h2 id="software-engineer"><strong>Software Engineer</strong></h2><p><a href="mailto:eric@epiccoleman.com">eric@epiccoleman.com</a></p><h3 id="summary"><strong>SUMMARY</strong></h3><p>Software engineering consultant with strong focus on quick delivery of
+high quality software using modern engineering practices. Deep
+experience in DevOps tools and solutions. Wide ranging experience in
+many areas of software development including full stack web development,
+mobile development, and embedded software development. Accomplished
+public speaker with talks at local usergroups and conferences.  Easy
+going personality with strong people skills. Avid, constant learner with
+a passion for sharing learning with colleagues.</p><h3 id="proficiencies"><strong>PROFICIENCIES</strong></h3><h4 id="languages"><strong>Languages</strong></h4><p>Golang, Typescript, Elixir, Ruby, Bash/Shell scripting, JavaScript, Java, Clojure, C++, C#, plus many others at varying levels of expertise</p><h4 id="tools/frameworks"><strong>Tools/Frameworks</strong></h4><p>Gitlab CI, Functional programming, React.js, Azure, Phoenix, Terraform, AWS, various test frameworks, Ansible, Jenkins, Spring, Vim, Git, Linux/OSX command line tools</p><h4 id="engineering-practices">Engineering Practices</h4><p>Test Driven Development, Continuous Integration and Delivery, DevOps, Pair Programming, Agile Software Development</p><h3 id="experience"><strong>EXPERIENCE</strong></h3><h4 id="augustwenty,-columbus-oh"><strong>Augustwenty, Columbus OH</strong></h4><h4 id="software-engineering-consultant"><em>Software Engineering Consultant</em></h4><ul><li><strong>Path Robotics</strong> - Led client robot cell Software Bring Up
+team. Facilitated and coordinated efforts between client software,
+ops, controls, and hardware teams to help build, calibrate, and
+deploy robotic welding solutions. Tracked down and fixed bugs in
+bring up procedures, wrote documentation, and trained ops engineers
+to take over tasks from software teams. Onboarded client software
+staff.
+</li><li><strong>OliveAI</strong> - Developed and supported Desktop app and SDK, using
+Golang, Typescript, Electron, React. Consulted on MacOS application
+signing.
+</li><li><strong>Here Technologies</strong> - Migrated client
+team’s C++ build process from Jenkins CI / Gerrit to Gitlab CI]{.c0}
+</li><li><strong>Internal</strong> - Designed, tested, and programmed Elixir/Phoenix
+web application utilizing external APIs]{.c0}
+</li><li><strong>Internal</strong> - Designed and implemented CI and DevOps processes
+for Elixir/Phoenix project and other internal efforts]{.c0}
+</li></ul><h4 id="accenture-product-x.0,-columbus-oh-(acquisition-of-pillar-technology)"><strong>Accenture Product X.0, Columbus OH</strong> (acquisition of Pillar Technology)</h4><h4 id="prpl-team"><em>Prpl Team</em></h4><ul><li>Provided technical expertise and wrote software for various
+business development projects, with a general focus on projects with
+a major hardware component.
+</li><li>Utilized hardware-in-the-loop testing techniques to deliver high
+quality embedded software in various industries including
+automotive, manufacturing, and cloud technologies
+</li></ul><h4 id="pillar-technology,-columbus-oh"><strong>Pillar Technology, Columbus OH</strong></h4><h4 id="pillar-labs"><em>Pillar Labs</em></h4><ul><li>Selected for team via internal application process. Conducted
+research on various technologies as part of an internal initiative
+to get ahead of the kinds of tech clients get excited about.
+Prototyped and test drove exploratory code in widely varied tech
+stacks. Evaluated functionality and potential value of new tools.
+Projects included an indoor geolocation system, an automotive cloud
+integration, and a virtual reality programming environment.
+</li></ul><h4 id="scientific-research-client:-infrastructure-as-a-service"><em>Scientific Research Client: Infrastructure as a Service</em></h4><ul><li>Designed and implemented automated deployments for on-site cloud
+</li><li>Managed private cloud infrastructure with OpenStack.
+</li></ul><h4 id="finance/banking-client:-credit-card-loyalty-and-management-app"><em>Finance/Banking Client: Credit Card Loyalty and Management App</em></h4><ul><li>Implemented “white label” mobile app with plugin architecture on
+both iOS and Android for easy integration into pre existing customer
+apps
+</li><li>Managed containerized team infrastructure as lead DevOps engineer,
+including CI server (Jenkins), version control server (Bitbucket),
+dependency/artifact hosting (Nexus), internal app deployment
+(Hockey).
+</li></ul><h4 id="agricultural-client:-mobile-build-pipeline"><em>Agricultural Client: Mobile Build Pipeline</em></h4><ul><li>Designed and implemented CI infrastructure for iOS development
+team.
+</li></ul><h4 id="agricultural-client:-embedded-control-software"><em>Agricultural Client: Embedded Control Software</em></h4><ul><li>Developed embedded application with C++ and Qt for internal
+computer systems in industrial farming vehicles.
+</li></ul><h3 id="education"><strong>EDUCATION</strong></h3><h4 id="ohio-university,-athens-oh"><strong>Ohio University, Athens OH</strong></h4><p>Completed coursework in Computer Science, Software Engineering</p><h3 id="resume-downloads"><strong>Resume Downloads</strong></h3><p>This resume is also available in PDF format.</p><ul><li><a href="/media/eric_coleman_cv.pdf">Compact CV</a> (same content as this page)
+</li><li><a href="/media/eric_coleman_cv_long.pdf">Detailed CV</a></li></ul>
+  </body>
+</html>
+<script>
+const ws_url = "ws://" + location.host + "/serum_live_reloader";
+var ws;
+
+connect();
+
+function connect() {
+  ws = new WebSocket(ws_url);
+  ws.onmessage = onMessage;
+  ws.onclose = onClose;
+}
+
+function onMessage(e) {
+  if (e.data === "reload") {
+    location.reload();
+  }
+}
+
+function onClose(e) {
+  console.warn("WebSocket disconnected from server. Reconnecting in 10 seconds.");
+  setTimeout(connect, 10000)
+}
+</script>

@@ -1,0 +1,183 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro:300&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <title>Another ChatGPT sample - epiccoleman.com</title>
+  </head>
+  <body>
+    <header>
+epiccoleman.com
+
+<ul><li><a href="/index.html">Home</a></li><li><a href="/posts">Posts</a></li></ul></header><h1 id="another-chatgpt-sample">Another ChatGPT sample</h1><p>Saturday, 3 Dec 2022</p><p>Tags:</p><ul><li><a href="/tags/chatgpt">chatgpt</a></li><li><a href="/tags/programming">programming</a></li></ul><p>here’s another sample. I haven’t taken the time to go through this code but it looks fairly good at a glance. this is nuts.</p><p>I see one or two things that might need tweaked, but still, pretty impressive.</p><blockquote><p><strong>Eric Coleman</strong></p><p>write an aws lambda function that uses the spotify api to fetch a user’s 10 most recently played songs</p></blockquote><blockquote><p>ChatGPT</p><p>Here is an example of an AWS Lambda function that uses the Spotify API to fetch a user’s 10 most recently played songs:</p><pre><code class="">const AWS = require(&#39;aws-sdk&#39;);
+const SpotifyWebApi = require(&#39;spotify-web-api-node&#39;);
+
+// Set up the Spotify API client
+const spotifyApi = new SpotifyWebApi({
+  clientId: &#39;your-client-id&#39;,
+  clientSecret: &#39;your-client-secret&#39;,
+});
+
+// The function handler is called by AWS Lambda when the function is invoked
+exports.handler = async (event) =&gt; {
+  // Authenticate with the Spotify API using the provided access token
+  const accessToken = event.accessToken;
+  spotifyApi.setAccessToken(accessToken);
+
+  // Fetch the user&#39;s 10 most recently played tracks
+  const tracks = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 10 });
+
+  // Return the tracks to the caller
+  return tracks;
+};</code></pre><p>This function uses the spotify-web-api-node library to interact with the Spotify API. It authenticates with the API using the provided access token, and then fetches the user’s 10 most recently played tracks. Finally, it returns the tracks to the caller.</p><p>To use this function, you would need to create an AWS Lambda function and provide the necessary dependencies, including the aws-sdk and spotify-web-api-node libraries. You would also need to provide your Spotify API client ID and client secret, which you can obtain by creating a Spotify developer account.</p><p>Once the function is deployed, you can invoke it by passing an access token for a Spotify user as the input. The function will use the access token to authenticate with the Spotify API and fetch the user’s recently played tracks, which will be returned in the response. You can then use this data to display the user’s recently played tracks in your app or website.</p></blockquote><blockquote><p><strong>Eric Coleman</strong></p><p>can you make the function write the tracks to a dynamodb table?</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>Sure, here is an example of how to modify the AWS Lambda function to write the fetched tracks to a DynamoDB table:</p><pre><code class="">const AWS = require(&#39;aws-sdk&#39;);
+const SpotifyWebApi = require(&#39;spotify-web-api-node&#39;);
+
+// Set up the DynamoDB client
+const dynamodb = new AWS.DynamoDB({ region: &#39;us-east-1&#39; });
+
+// Set up the Spotify API client
+const spotifyApi = new SpotifyWebApi({
+  clientId: &#39;your-client-id&#39;,
+  clientSecret: &#39;your-client-secret&#39;,
+});
+
+// The function handler is called by AWS Lambda when the function is invoked
+exports.handler = async (event) =&gt; {
+  // Authenticate with the Spotify API using the provided access token
+  const accessToken = event.accessToken;
+  spotifyApi.setAccessToken(accessToken);
+
+  // Fetch the user&#39;s 10 most recently played tracks
+  const tracks = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 10 });
+
+  // Write the tracks to the DynamoDB table
+  const tableName = &#39;recently-played-tracks&#39;;
+  const items = tracks.map((track) =&gt; ({
+    id: { S: track.id },
+    name: { S: track.name },
+    artist: { S: track.artists[0].name },
+    album: { S: track.album.name },
+    playedAt: { S: track.played_at },
+  }));
+  await dynamodb.batchWriteItem({
+    RequestItems: {
+      [tableName]: items.map((item) =&gt; ({ PutRequest: { Item: item } })),
+    },
+  });
+
+  // Return the tracks to the caller
+  return tracks;
+};</code></pre><p>This modified function uses the aws-sdk library to interact with DynamoDB. It sets up a DynamoDB client and connects to the us-east-1 region. Then, after it fetches the user’s recently played tracks from the Spotify API, it writes the tracks to a DynamoDB table called recently-played-tracks.</p><p>To use this function, you would need to create a DynamoDB table with the appropriate schema, and provide the necessary permissions for the function to write to the table. You would also need to provide your Spotify API client ID and client secret, which you can obtain by creating a Spotify developer account</p></blockquote><blockquote><p><strong>Eric Coleman</strong></p><p>how would i create the dynamodb table with the recently-played-tracks schema?</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>To create the DynamoDB table with the recently-played-tracks schema, you can use the following AWS CLI command:</p><pre><code class="">aws dynamodb create-table \
+  --table-name recently-played-tracks \
+  --attribute-definitions \
+    AttributeName=id,AttributeType=S \
+  --key-schema AttributeName=id,KeyType=HASH \
+  --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1</code></pre><p>This command creates a DynamoDB table called recently-played-tracks with a single primary key attribute called id. This attribute is of type S (string), and is used as the hash key for the table.</p><p>The table also has provisioned throughput of 1 read capacity unit and 1 write capacity unit. This means that the table can support up to 1 read operation per second and 1 write operation per second, on average. You can adjust these values as needed to support the expected read and write throughput of your application.</p><p>Once the table is created, you can use the following AWS CLI command to verify that the table has been created and is in the ACTIVE state:</p><pre><code class="">aws dynamodb describe-table --table-name recently-played-tracks</code></pre><p>You can also use the AWS Management Console to view and manage the DynamoDB table. To do this, go to the DynamoDB section of the console, and select the recently-played-tracks table from the list of tables. This will open the table details page, where you can view the table’s schema, throughput settings, and other details.</p></blockquote><blockquote><p><strong>Eric Coleman</strong></p><p>can you write a unit test for the lambda function?</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>Sure, here is an example of a unit test for the AWS Lambda function that fetches and writes a user’s recently played tracks to a DynamoDB table:</p><pre><code class="">const AWS = require(&#39;aws-sdk&#39;);
+const SpotifyWebApi = require(&#39;spotify-web-api-node&#39;);
+const sinon = require(&#39;sinon&#39;);
+const { expect } = require(&#39;chai&#39;);
+
+const lambda = require(&#39;../src/lambda&#39;);
+
+describe(&#39;lambda&#39;, () =&gt; {
+  let dynamodb;
+  let spotifyApi;
+
+  beforeEach(() =&gt; {
+    dynamodb = new AWS.DynamoDB({ region: &#39;us-east-1&#39; });
+    spotifyApi = new SpotifyWebApi({
+      clientId: &#39;your-client-id&#39;,
+      clientSecret: &#39;your-client-secret&#39;,
+    });
+    sinon.stub(spotifyApi, &#39;getMyRecentlyPlayedTracks&#39;).resolves([      {        id: &#39;track-1&#39;,        name: &#39;Track 1&#39;,        artists: [{ name: &#39;Artist 1&#39; }],
+        album: { name: &#39;Album 1&#39; },
+        played_at: &#39;2022-12-03T12:00:00Z&#39;,
+      },
+      {
+        id: &#39;track-2&#39;,
+        name: &#39;Track 2&#39;,
+        artists: [{ name: &#39;Artist 2&#39; }],
+        album: { name: &#39;Album 2&#39; },
+        played_at: &#39;2022-12-03T12:01:00Z&#39;,
+      },
+    ]);
+    sinon.stub(dynamodb, &#39;batchWriteItem&#39;).resolves();
+  });
+
+  afterEach(() =&gt; {
+    spotifyApi.getMyRecentlyPlayedTracks.restore();
+    dynamodb.batchWriteItem.restore();
+  });
+
+  it(&#39;fetches and writes the user\&#39;s recently played tracks&#39;, async () =&gt; {
+    // Invoke the Lambda function with an access token
+    const result = await lambda.handler({ accessToken: &#39;access-token&#39; });
+
+    // Expect the function to have fetched the user&#39;s recently played tracks
+    expect(spotifyApi.getMyRecentlyPlayedTracks).to.have.been.calledOnceWith({ limit: 10 });
+
+    // Expect the function to have written the tracks to the DynamoDB table
+    expect(dynamodb.batchWriteItem).to.have.been.calledOnceWith({
+      RequestItems: {
+        recently-played-tracks: [
+          { PutRequest: {
+            Item: {
+              id: { S: &#39;track-1&#39; },
+              name: { S: &#39;Track 1&#39; },
+              artist: { S: &#39;Artist 1&#39; },
+              album: { S: &#39;Album 1&#39; },
+              playedAt: { S: &#39;2022-12-03T12:00:00Z&#39; },
+            },
+          } },
+          { PutRequest: {
+            Item: {
+              id: { S: &#39;track-2&#39; },
+              name: { S: &#39;Track 2&#39; },
+              artist: { S: &#39;Artist 2&#39; },
+              album: { S: &#39;Album 2&#39; },
+              playedAt: { S: &#39;2022-12-03T12:01:00Z&#39; },</code></pre></blockquote><blockquote><p><strong>Eric Coleman</strong></p><p>can you write a gitlab ci file for this project that runs the tests when a new commit is pushed?</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>Sure, here is an example of a .gitlab-ci.yml file for a project that runs the unit tests for the AWS Lambda function when a new commit is pushed:</p><pre><code class="">image: node:14.15
+
+stages:
+  - test
+
+cache:
+  paths:
+    - node_modules/
+
+test:
+  stage: test
+  script:
+    - npm install
+    - npm test</code></pre><p>This .gitlab-ci.yml file defines a single pipeline stage called test. It specifies the node:14.15 Docker image to use for the pipeline, and defines a node_modules cache to speed up the build process.</p><p>In the test stage, the pipeline runs the following commands:</p><pre><code class="">    npm install: Installs the project dependencies.
+    npm test: Runs the unit tests for the project.</code></pre><p>When a new commit is pushed to the Git repository, GitLab will automatically trigger the pipeline and run these commands. If the tests pass, the pipeline will be marked as successful. If any tests fail, the pipeline will be marked as failed and the build log will show which tests failed.</p><p>You can adjust this .gitlab-ci.yml file as needed to fit the specific requirements of your project. For example, you can add additional stages for building or deploying the project, and specify the environment variables and secrets that the pipeline needs to access. You can also specify the conditions under which the pipeline should be triggered, such as only when commits are pushed to specific branches or tags.</p></blockquote><blockquote><p><strong>Eric Coleman</strong></p><p>write a dockerfile based on node:14.5 that includes xvfb in the container</p></blockquote><blockquote><p><strong>ChatGPT</strong></p><p>Here is an example of a Dockerfile that extends the node:14.5 image and includes xvfb in the container:</p><pre><code class="">FROM node:14.5
+
+RUN apt-get update &amp;&amp; apt-get install -y xvfb
+
+CMD [&quot;xvfb-run&quot;, &quot;--server-args=-screen 0 1024x768x24&quot;, &quot;node&quot;]</code></pre><p>This Dockerfile starts from the node:14.5 image, which includes the latest version of Node.js. It then runs the apt-get command to update the package list and install xvfb from the default package repository.</p><p>Finally, the CMD instruction is used to specify the command that should be run when the container is started. In this case, the command is xvfb-run, which is a utility that allows applications to be run in a virtual framebuffer. The —server-args option is used to specify the screen size and color depth of the virtual framebuffer, and the node command is passed as the final argument to run the Node.js application.</p><p>To build a Docker image using this Dockerfile, you can run the following command:</p><pre><code class="">docker build -t my-node-app .</code></pre><p>This will create a Docker image with the tag my-node-app, which you can then use to run containers based on this image. To start a container from the image and run the Node.js application inside a virtual framebuffer, you can use the following command:</p><pre><code class="">docker run --rm -it my-node-app</code></pre><p>This will start a new container from the my-node-app image and run it in the foreground, with the —rm flag to automatically remove the container when it exits. The -it flag allows you to interact with the container’s terminal, so you can see the output of the Node.js application as it runs.</p><p>Once the container is running, you can use xvfb-run to run any Node.js</p></blockquote>
+  </body>
+</html>
+<script>
+const ws_url = "ws://" + location.host + "/serum_live_reloader";
+var ws;
+
+connect();
+
+function connect() {
+  ws = new WebSocket(ws_url);
+  ws.onmessage = onMessage;
+  ws.onclose = onClose;
+}
+
+function onMessage(e) {
+  if (e.data === "reload") {
+    location.reload();
+  }
+}
+
+function onClose(e) {
+  console.warn("WebSocket disconnected from server. Reconnecting in 10 seconds.");
+  setTimeout(connect, 10000)
+}
+</script>
